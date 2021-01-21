@@ -1,0 +1,16 @@
+---
+- hosts: all
+  tasks:
+    - name: Import REMI GPG Key
+      rpm_key: "key={{ item }} state=present"
+      with_items:
+        - "http://rpms.famillecollet.com/RPM-GPG-KEY-remi"
+
+    - name: Install Remi Repo
+      command: "rpm -Uvh --force {{ item.href }} creates={{ item.creates }}"
+      with_items:
+        - href: "http://rpms.famillecollet.com/enterprise-remi-release-6.rpm"
+        - creates: "/etc/yum.repos.d/remi.rpm"
+
+    - name: Install EPEL release
+      yum: name=epel-release state=present 
