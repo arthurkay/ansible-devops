@@ -1,0 +1,52 @@
+---
+# Install Postgresql DB Dependencies
+- block:
+  - apt:
+    name: {{ item }}
+    update_cache: true
+    state: latest
+    with_items:
+      - bash
+      - openssl
+      - libssl-dev
+      - libssl-doc
+  when: ansible_os_family == 'Debian'
+
+- block:
+  - apt:
+    name: {{ item }}
+    update_cache: true
+    state: latest
+    with_items:
+      - bash
+      - openssl
+      - libssl-dev
+      - libssl-doc
+  when: ansible_os_family = 'RedHat'
+
+  # Install PostgreSQL DB 
+- block:
+  - apt:
+    name: {{ item }}
+    update_cache: true
+    state: latest
+    with_items:
+      - postgresql
+      - postgresql-contrib
+      - libpq-dev
+      - python-psycopg2
+    notify: Restart PostgreSQL
+  when: ansible_os_family == 'Debian'
+
+- block:
+  - apt:
+    name: {{ item }}
+    update_cache: true
+    state: latest
+    with_items:
+      - postgresql
+      - postgresql-contrib
+      - libpq-dev
+      - python-psycopg2
+    notify: Restart PostgreSQL
+  when: ansible_os_family = 'RedHat'

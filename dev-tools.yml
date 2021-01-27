@@ -1,0 +1,35 @@
+---
+- hosts: all
+  tasks:
+      # Install Git, wget, curl, fail2ban, nginx on RedHat
+      - block:
+        - yum:
+          - name: {{ item }}
+          - state: latest
+          with_items:
+            - git
+            - wget
+            - curl
+            - fail2ban
+            - nginx
+      - when: ansible_os_family == 'RedHat'
+
+      # Install Git, curl, wget, fail2ban, nginx on Debian
+      - block:
+        - apt:
+          - name: {{ item }}
+          - state: latest
+          with_items:
+            - git
+            - wget
+            - curl
+            - fail2ban
+            - nginx
+      - when: ansible_os_family == 'Debian'
+
+    - name: Enable  Fail2Ban, mariadb, nginx daemons
+      service: name={{ item }} state=started enabled=yes
+      with_items:
+        - fail2ban
+        - mariadb 
+        - nginx
